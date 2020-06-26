@@ -1,0 +1,28 @@
+<style>
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 7px 10px;
+  margin: 4px 0;
+  display: inline-block;
+  border: 2px solid #ccc;
+  box-sizing: border-box;
+}
+
+.btn.login-button:hover {
+  opacity: 0.8;
+  background-color:#4ECC74;
+  color: white;
+}
+
+.btn.login-button{ 
+	background-color: #2ECC72;
+	border: 1px solid #1E8449;
+	color: white; 
+	cursor: pointer;
+}
+#container {
+  border: 1px solid #ccc;
+}
+
+</style>

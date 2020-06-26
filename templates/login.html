@@ -1,0 +1,69 @@
+<html>
+  <head>
+  <style>
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 7px 10px;
+  margin: 4px 0;
+  display: inline-block;
+  border: 2px solid #ccc;
+  box-sizing: border-box;
+}
+
+.btn.login-button:hover {
+  opacity: 0.8;
+  background-color:#4ECC74;
+  color: white;
+}
+
+.btn.login-button{ 
+	background-color: #2ECC72;
+	border: 1px solid #1E8449;
+	color: white; 
+	cursor: pointer;
+}
+#container {
+  border: 1px solid #ccc;
+}
+
+
+
+</style>
+    <title>Login page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{url_for("static", filename = "css/login.css")}}" rel="stylesheet" media="screen">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+  <div id = "login-nav" class ="p-3" style = "text-align:center ;background-color:#52BE80;">
+	<h1>ABC Hospital Management System </h1>
+	 
+ </div>
+ 
+ <div id="container" class="mx-auto card m-5 p-0 w-25">
+	<div class="card-header" style = "background-color:#52BE80;">	
+	 <h3>Login</h3>
+	 </div>
+	  <div class="card-body">
+      <form action="" method="post">
+	  <p class="card-text"> Username </p>
+        <input type="text" placeholder="Username" name="username" value="{{
+          request.form.username }}">
+		  <br/>
+		  
+	<p class="card-text">Password </p>
+         <input type="password" placeholder="Password" name="password" value="{{
+          request.form.password }}">
+		 <br/> 
+      
+	   <a href="#" class="btn btn-primary btn-block login-button mt-2 p-2">Login</a>
+	
+      </form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+     </div>
+</div>
+  </body>
+</html>

@@ -19,3 +19,27 @@ class PatientStore(me.Document):
     ws_state = me.StringField(required=True)
     ws_status = me.IntField()
 
+class MedicineMaster(me.Document):
+
+    med_id = me.StringField(required=True)
+    med_name = me.StringField(required=True)
+    med_qty = me.IntField(required=True)
+    med_rate = me.FloatField(required=True)
+
+class PatientMed(me.Document):
+
+    pat_id = me.ReferenceField(PatientStore)
+    med_id = me.ReferenceField(MedicineMaster)
+    med_qty_issued = me.IntField(required=True)
+
+class DiagnosticsMaster(me.Document):
+
+    test_id = me.StringField(required=True)
+    test_name = me.StringField(required=True)
+    test_charge = me.FloatField(required=True)
+
+class PatientDiag(me.Document):
+
+    pat_id = me.ReferenceField(PatientStore)
+    test_id = me.ReferenceField(DiagnosticsMaster)
+

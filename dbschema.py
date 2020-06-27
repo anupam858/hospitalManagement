@@ -1,10 +1,17 @@
 import mongoengine as me
+from werkzeug.security import check_password_hash
 
 class UserStore(me.Document):
 
     user_id = me.StringField(required=True)
     password = me.StringField(required=True)
     time_stamp = me.DateTimeField()
+
+    def get_password(self, password):
+
+        print(self.password, password)
+        return check_password_hash(self.password, password)
+
 
 class PatientStore(me.Document):
 

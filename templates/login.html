@@ -12,6 +12,13 @@
 
   </head>
   <body>
+
+    {% for error in get_flashed_messages() %}
+      <div class="alert alert-danger" role="alert">
+        <strong>{{ error }}</strong>, Please enter correct user name and password.
+      </div>
+    {% endfor %}
+
     <div class="row">
       <div class= "card col-10 col-lg-3 mx-auto mt-5 px-0">
         <h5 class="card-header text-light" style = "background-color:#218F76;">Login</h5>
@@ -25,13 +32,11 @@
               
               <div class="form-group">
                 <label for="password">Password </label>
-                <input type="password" class="form-control" placeholder="Password" name="password">
+                <input type="password" class="form-control" placeholder="Password" name="password" required>
               </div>
               <button type="submit" class="btn btn-primary col-sm-12">Login</button>
             </form>
-            {% for error in get_flashed_messeges%}
-              {{ error }}
-            {% endfor %}
+            
           </div>
       </div>
     </div>

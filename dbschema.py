@@ -9,7 +9,6 @@ class UserStore(me.Document):
 
     def get_password(self, password):
 
-        print(self.password, password)
         return check_password_hash(self.password, password)
 
 
@@ -36,7 +35,7 @@ class MedicineMaster(me.Document):
 class PatientMed(me.Document):
 
     pat_id = me.ReferenceField(PatientStore)
-    med_id = me.ReferenceField(MedicineMaster)
+    med_id = me.StringField(required=True)
     med_qty_issued = me.IntField(required=True)
 
 class DiagnosticsMaster(me.Document):
@@ -48,5 +47,5 @@ class DiagnosticsMaster(me.Document):
 class PatientDiag(me.Document):
 
     pat_id = me.ReferenceField(PatientStore)
-    test_id = me.ReferenceField(DiagnosticsMaster)
+    test_id = me.StringField(required=True)
 

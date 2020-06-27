@@ -1,0 +1,31 @@
+
+button.btn.btn-primary:hover , input.btn.btn-primary:hover{
+  opacity: 0.8;
+  background-color:#4ECC74;
+  color: white;
+}
+button.btn.btn-primary:click , input.btn.btn-primary:click{
+  
+  background-color: #218F76;
+  color: white;
+}
+
+button.btn.btn-primary, input.btn.btn-primary{ 
+	background-color: #2ECC72;
+	border: 0px;
+	color: white; 
+	cursor: pointer;
+}
+
+nav.navbar.sticky-top.navbar-expand-lg.navbar-dark.bg-dark{
+  background-color: #218F76 !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255,255,255,.8);
+}
+
+textarea.form-control.col-lg-7.float-right{
+
+  height: 6em;
+}

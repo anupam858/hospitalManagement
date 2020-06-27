@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Blueprint, flash,session, url_for
+from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for
 
 bp = Blueprint('hospitalmanagement' ,__name__)
 
@@ -12,7 +12,7 @@ def home():
 def login():
     if request.method == 'POST':
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            flash('Wrong Credentials')
+            flash('Wrong Credentials', 'error')
             return redirect(url_for('home'))
     
         else:
@@ -22,7 +22,8 @@ def login():
 
 @bp.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('username')
+    session.pop('password')
     return redirect(url_for(home))
             
         

@@ -38,26 +38,25 @@ def patient_reg():
 @bp.route('/register', methods=['POST'])
 def register():
 
-    try:
-        id = str(request.form.bed_type) + str(request.form.pat_ssn[2:9])
-        pat= PatientStore(w_ssn= request.form.pat_ssn)
-        pat.ws_pat_id = id
-        pat.ws_pat_name = request.form.pat_name
-        pat.ws_age = request.form.pat_age
-        pat.ws_doj = request.form.pat_doa
-        pat.ws_rtype = request.form.bed_type
-        pat.ws_adrs = request.form.pat_address
-        pat.ws_city = request.form.pat_city
-        pat.ws_state = request.form.pat_state
-        pat.ws_status = 1
-        print(id, request.form.pat_doa)
-        pat.save()
-        flash("Patient Registered","message")
-    except:
-        flash("Registration Failed","error")
+
+    id = str(request.form['bed_type']) + str(request.form['pat_ssn'][2:9])
+    pat= PatientStore(ws_ssn= request.form['pat_ssn'])
+    pat.ws_pat_id = str(id)
+    pat.ws_pat_name = request.form['pat_name']
+    pat.ws_age = request.form['pat_age']
+    pat.ws_doj = datetime.strptime(request.form['pat_doa'], '%Y-%m-%dT%H:%M')
+    pat.ws_rtype = request.form['bed_type']
+    pat.ws_adrs = request.form['pat_address']
+    pat.ws_city = request.form['pat_city']
+    pat.ws_state = request.form['pat_state']
+    pat.ws_status = 1
+    print(id, request.form['pat_doa'])
+    pat.save()
+    flash("Patient Registered","message")
+    
 
 
-    return redirect(url_for("hospitalmanagement.patient_reg"), 404)
+    return redirect(url_for("hospitalmanagement.patient_reg"))
 
 
 @bp.route('/logout')

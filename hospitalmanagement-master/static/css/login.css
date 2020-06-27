@@ -1,0 +1,18 @@
+
+button.btn.btn-primary:hover {
+  opacity: 0.8;
+  background-color:#4ECC74;
+  color: white;
+}
+button.btn.btn-primary:click {
+  
+  background-color: #218F76;
+  color: white;
+}
+
+button.btn.btn-primary{ 
+	background-color: #2ECC72;
+	border: 0px;
+	color: white; 
+	cursor: pointer;
+}

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from flask_mongoengine import MongoEngine
 from . import hospitalmanagement
 def create_app(test_config=None):
@@ -14,5 +14,6 @@ def create_app(test_config=None):
 
     db = MongoEngine(app)
     app.register_blueprint(hospitalmanagement.bp)
+    
 
     return app

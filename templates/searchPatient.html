@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %} Search Patient {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <center><h2 class="display-4">Search Patient</h2></center>
+    <hr class="my-0">
+    {% if pat==None %}
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-info" role="alert">{{message}}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
+        <form action="/patientSearch/psearch" method="POST">
+            <div class="form-group row">
+            <label for="pat_id" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="search" class="form-control col-lg-5 float-right" name="pat_id" placeholder="Patient Id" maxlength="9" min="100000000" value="{{pat.ws_pat_id}}" required>
+            <button type="submit" class="btn btn-primary btn-sm ml-1">Search</button>
+            </div>
+            <div class="form-group row">
+            <label for="pat_name" class="control-label col-sm-4">Patient Name</label>
+            <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value="{{pat.ws_pat_name}}" readonly>
+            </div>
+            <div class="form-group row">
+                <label for="pat_age" class="control-label col-sm-4">Patient Age</label>
+                <input type="number" class="form-control col-lg-5 float-right" name="pat_age" placeholder="Age" min="0" max="999" value='{{pat.ws_age}}' readonly>
+            </div>
+            <div class="form-group row">
+                <label for="pat_doa" class="control-label col-sm-4">Date of Admission</label>
+                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" value="{{pat.ws_doj.strftime('%Y-%m-%dT%H:%M')}}" placeholder="Admission Date" readonly>
+            </div>
+            <div class="form-group row">
+                <label for="bed_type" class="control-label col-sm-4">Type of bed</label>
+                <select  name="bed_type" class="form-control col-lg-5 float-right" disabled>
+                    {% if pat.ws_rtype=="GW" %}
+                        <option value= "GW" selected>General Ward</option>
+                    {% elif pat.ws_rtype=="SS" %}
+                        <option value="SS">Semi Sharing</option>
+                    {% else %}
+                        <option value="SR">Single Room</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="form-group row">
+                <label for="pat_address" class="control-label col-sm-4">Address</label>
+                <textarea class="form-control col-lg-7 float-right" name="pat_address" readonly>{{pat.ws_adrs}}</textarea>
+            </div>
+            <div class="form-group row">
+                <label for="pat_city" class="control-label col-sm-4">City</label>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_city" placeholder="City" value="{{pat.ws_city}}" readonly>
+            </div>
+            <div class="form-group row">
+                <label for="pat_state" class="control-label col-sm-4">State</label>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_state" placeholder="State" value="{{pat.ws_state}}" readonly>
+            </div>
+            <div><sup>*</sup>Mandatory</div>
+        </form>
+    </div>
+    {{ super() }}
+{% endblock %}

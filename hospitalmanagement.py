@@ -1,9 +1,21 @@
-from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for
+import functools
+from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for, abort, jsonify, json
 from .dbschema import UserStore, PatientStore
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 
 bp = Blueprint('hospitalmanagement' ,__name__)
+
+def login_required(f):
+    @functools.wraps(f)
+    def wrap(*args, **kwargs):
+        if 'username' and 'password' in session.keys():
+            return f(*args, **kwargs)
+        else:
+            flash("You need to login first")
+            return redirect(url_for('hospitalmanagement.home'))
+
+    return wrap
 
 @bp.route('/')
 @bp.route('/home')
@@ -31,11 +43,13 @@ def login():
             return redirect(url_for('hospitalmanagement.patient_reg'))
 
 @bp.route('/patientregistration')
+@login_required
 def patient_reg():
 
     return(render_template("registration.html"))
 
 @bp.route('/register', methods=['POST'])
+@login_required
 def register():
 
 
@@ -58,8 +72,73 @@ def register():
 
     return redirect(url_for("hospitalmanagement.patient_reg"))
 
+@bp.route('/patientSearch')
+@login_required
+def pat_details():
+
+    id = request.args.get('id')
+    pat = PatientStore.objects(ws_pat_id= id).first()
+    if pat==None:
+        flash('No Patient Found')
+    
+    return render_template('searchPatient.html', pat= pat)
+
+
+@bp.route('/<string:section>/psearch', methods =['POST'])
+@login_required
+def search(section):
+
+    if request.method == 'POST':
+
+        id = request.form.get('pat_id')
+        if id == None:
+            return abort(400)
+
+        else:
+
+            if(section=='patientSearch'):
+                return redirect(url_for('hospitalmanagement.pat_details', id = id))
+            elif(section=='diagnosisPatSearch'):
+                return redirect(url_for('hospitalmanagement.diag_pat_details', id = id))
+            elif(section=='pharmacyPatSearch'):
+                return redirect(url_for('hospitalmanagement.pharm_pat_details', id = id))
+            else:
+                return abort(404)
+
+    return abort(400)
+
+@bp.route('/viewpatients', methods = ['GET'])
+def view():
+    if request.method == 'GET':
+        pat = PatientStore.objects(ws_status= 1)
+        if pat == None:
+            flash('No active patients are available', "error")
+
+        return render_template('viewpatients.html')
+
+@bp.route('/update', methods=['POST','GET'])
+def update():
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'Get_button':
+
+            patient = PatientStore.objects(ws_pat_id= request.form['patient_id']).first()
+            if patient==None:
+                flash('Invalid Patient ID', "error")
+                return render_template('update.html')
+            else:
+                patient = PatientStore.objects(ws_pat_id= request.form['patient_id']).first()
+                return render_template('update.html', patient = patient)
+            
+        elif request.form['submit_button'] == 'Update_button':
+            PatientStore.objects(ws_pat_id= request.form['patient_id']).update(patient_name = request.args.get('pat_name'),age = request.args.get('pat_age'),doj = request.args.get('pat_doa'),rtype = request.args.get('bed-type'),adrs = request.args.get('pat_address'),state = request.args.get('pat_state'),city = request.args.get('pat_city'))
+            flash('Updated Successfully', "success")
+            return render_template('update.html')
+
+    else:
+        return render_template("update.html")
 
 @bp.route('/logout')
+@login_required
 def logout():
     session.clear()
     return redirect(url_for(home))

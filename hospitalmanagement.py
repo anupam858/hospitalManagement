@@ -137,6 +137,27 @@ def update():
     else:
         return render_template("update.html")
 
+@bp.route('/delete', methods=['POST','GET'])
+def delete():
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'Get_button':
+
+            patient = PatientStore.objects(ws_pat_id= request.form['patient_id']).first()
+            if patient==None:
+                flash('Invalid Patient ID', "error")
+                return render_template('delete.html')
+            else:
+                patient = PatientStore.objects(ws_pat_id= request.form['patient_id']).first()
+                return render_template('delete.html', patient = patient)
+
+        elif request.form['submit_button'] == 'Delete_button':
+            PatientStore.objects(ws_pat_id= request.form['patient_id']).delete()
+            flash('Deleted Successfully', "success")
+            return render_template('delete.html')
+        
+    else:
+        return render_template("delete.html")
+    
 @bp.route('/logout')
 @login_required
 def logout():

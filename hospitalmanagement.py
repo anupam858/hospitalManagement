@@ -93,8 +93,10 @@ def pharm_pat_details():
         pat = PatientStore.objects(ws_pat_id=id)
         meds = PatientMed.objects(pat_id= pat)
 
-        if pat_details== None and id is not None:
+        if pat== None and id is not None:
             flash('No Patient Found')
+        elif(id==None):
+            return(400)
 
         return render_template('pharma.html', meds= meds)
 

@@ -1,6 +1,6 @@
 import functools
 from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for, abort, jsonify, json
-from .dbschema import UserStore, PatientStore
+from .dbschema import UserStore, PatientStore, PatientMed
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 
@@ -78,10 +78,27 @@ def pat_details():
 
     id = request.args.get('id')
     pat = PatientStore.objects(ws_pat_id= id).first()
-    if pat==None:
+    if pat==None and id is not None:
         flash('No Patient Found')
     
     return render_template('searchPatient.html', pat= pat)
+
+@bp.route('/pharmacy/patientSearch', methods=['GET'])
+@login_required
+def pharm_pat_details():
+
+    if request.method=='GET':
+
+        id = request.args.get('id')
+        pat = PatientStore.objects(ws_pat_id=id)
+        meds = PatientMed.objects(pat_id= pat)
+
+        if pat_details== None and id is not None:
+            flash('No Patient Found')
+
+        return render_template('pharma.html', meds= meds)
+
+    
 
 
 @bp.route('/<string:section>/psearch', methods =['POST'])
@@ -114,7 +131,9 @@ def view():
         if pat == None:
             flash('No active patients are available', "error")
 
-        return render_template('viewpatients.html')
+        return render_template('viewpatients.html', patients=pat)
+
+    return abort(400)
 
 @bp.route('/update', methods=['POST','GET'])
 def update():

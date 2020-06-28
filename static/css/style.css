@@ -29,3 +29,8 @@ textarea.form-control.col-lg-7.float-right{
 
   height: 6em;
 }
+.table .thead-dark th {
+  color: #fff;
+  background-color: #218f76;
+  border-color: #218f76;
+}

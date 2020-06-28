@@ -35,7 +35,7 @@ class MedicineMaster(me.Document):
 class PatientMed(me.Document):
 
     pat_id = me.ReferenceField(PatientStore)
-    med_id = me.StringField(required=True)
+    med_id = me.ReferenceField(MedicineMaster)
     med_qty_issued = me.IntField(required=True)
 
 class DiagnosticsMaster(me.Document):

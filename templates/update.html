@@ -23,20 +23,20 @@
 			<button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary mt-2">Get</button>
             <div class="form-group row">
             <label for="pat_name" class="control-label col-sm-4">Patient Name</label>
-            <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value= "{{ patient['ws_pat_name']}}" >
+            <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value= "{{ patient.ws_pat_name}}" >
             </div>
             <div class="form-group row">
                 <label for="pat_age" class="control-label col-sm-4">Patient Age</label>
-                <input type="number" class="form-control col-lg-5 float-right" name="pat_age" placeholder="Age" value= "{{ patient['ws_age']}}" min="0" max="999" >
+                <input type="number" class="form-control col-lg-5 float-right" name="pat_age" placeholder="Age" value= "{{ patient.ws_age}}" min="0" max="999" >
             </div>
             <div class="form-group row">
                 <label for="pat_doa" class="control-label col-sm-4">Date of Admission</label>
-                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient['ws_doj']}}">
+                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient.ws_doj}}">
             </div>
             <div class="form-group row">
                 <label for="bed_type" class="control-label col-sm-4">Type of bed</label>
                 <select  name="bed_type" class="form-control col-lg-5 float-right">
-                <option value= "{{ patient['ws_rtype']}}">{{ patient['ws_rtype']}}</option>
+                <option value= "{{ patient.ws_rtype}}">{{ patient.ws_rtype}}</option>
 				<option value= "GW" selected>General Ward</option>
                 <option value="SS">Semi Sharing</option>
                 <option value="SR">Single Room</option>
@@ -44,15 +44,15 @@
             </div>
             <div class="form-group row">
                 <label for="pat_address" class="control-label col-sm-4">Address</label>
-                <textarea class="form-control col-lg-7 float-right" name="pat_address" required> {{ patient['ws_adrs']}} </textarea>
+                <textarea class="form-control col-lg-7 float-right" name="pat_address" required> {{ patient.ws_adrs}} </textarea>
             </div>
             <div class="form-group row">
                 <label for="pat_city" class="control-label col-sm-4">City</label>
-                <input type="text" class="form-control col-lg-5 float-right" name="pat_city" placeholder="City" value= "{{ patient['ws_city']}}" required>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_city" placeholder="City" value= "{{ patient.ws_city}}" required>
             </div>
             <div class="form-group row">
                 <label for="pat_state" class="control-label col-sm-4">State</label>
-                <input type="text" class="form-control col-lg-5 float-right" name="pat_state" placeholder="State" value= "{{ patient['ws_state']}}" required>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_state" placeholder="State" value= "{{ patient.ws_state}}" required>
             </div>
 			
             <div><sup>*</sup>Mandatory</div>

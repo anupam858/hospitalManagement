@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %} Pharmacy {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <center><h2 class="display-4">Pharmacy</h2></center>
+    <hr>
+	 {% for message in get_flashed_messages() %}
+        {{message}}
+    {% endfor %}
+    <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
+	
+        <form action="{{url_for('pharma')}}" method="POST">
+            <div class="form-group row">
+            <label for="med-name" class="control-label col-sm-4">Medicine Name<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="med-name" placeholder="Medicine Name" maxlength="9" min="100000000" required>
+            </div>
+			<button type="submit" name = "submit_button" value = "Get_availability_button" class="btn btn-primary mt-2">See Availability</button>
+			
+			{% if meds != None %}
+			<div class="form-group row">
+            <label for="med-name" class="control-label col-sm-4">Quantity<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="qty" placeholder="1" maxlength="9" min="100000000" required>
+            </div>
+			{% endif %}
+            <div><sup>*</sup>Mandatory</div>
+			
+        </form>
+    </div>
+    
+	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Medicine</center></th>
+            <th scope="col"><center>Quantity</center></th>
+            <th scope="col"><center>Rate</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% if meds != None %}
+        {% for m in meds %}
+        <tr>
+            <th scope="row">{{ m.med_id.med_name }}</th>
+            <td>{{ m.med_id.med_qty }}</td>
+            <td>{{ m.med_id.med_rate }}</td>
+            <td>{{ m.med_id.med_rate * m.med_id.med_qty }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+	<button type="submit" name = "submit_button" value = "Add" class="btn btn-primary mt-2">Add</button>
+	<br>
+	<br>
+	<button type="submit" name = "submit_button" value = "Update" class="btn btn-primary mt-2">Update</button>
+	
+    {{ super() }}
+{% endblock %}

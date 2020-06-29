@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %} Pharmacy {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <center><h2 class="display-4">Pharmacy</h2></center>
+    <hr>
+	 {% for message in get_flashed_messages() %}
+        {{message}}
+    {% endfor %}
+    <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
+	
+        <form action="{{url_for('pharma')}}" method="POST">
+            <div class="form-group row">
+            <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="patient_id" placeholder="Patient Id" maxlength="9" min="100000000" required>
+            </div>
+			<button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary mt-2">Get</button>
+			
+            <div><sup>*</sup>Mandatory</div>
+			
+        </form>
+    </div>
+	
+	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Patient ID</center></th>
+            <th scope="col"><center>Name</center></th>
+            <th scope="col"><center>Age</center></th>
+            <th scope="col"><center>Address</center></th>
+            <th scope="col"><center>DOJ</center></th>
+            <th scope="col"><center>Type of Room</center></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+
+        {% if meds != None %}
+		{% for m in meds %}
+        <tr>
+            <th scope="row">{{ m.pat_id.ws_pat_id }}</th>
+            <td>{{ m.pat_id.ws_pat_name }}</td>
+            <td>{{ m.pat_id.ws_age }}</td>
+            <td>{{ m.pat_id.ws_adrs }}</td>
+            <td>{{ m.pat_id.ws_doj.strftime('%Y-%m-%d') }}</td>
+            {% if m.pat_id.ws_rtype=="GW" %}
+                <td>General Ward</td>
+            {% elif m.pat_id.ws_rtype=="SS" %}
+                <td>Semi Sharing</td>
+            {% else %}
+                <td>Single Room</td>
+            {% endif %}
+        </tr>
+		{% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+	
+	<center><h2 class="display-4">Medicine Issued</h2></center>
+	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Medicine</center></th>
+            <th scope="col"><center>Quantity</center></th>
+            <th scope="col"><center>Rate</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+
+        {% if meds != None %}
+        {% for m in meds %}
+        <tr>
+            <th scope="row">{{ m.med_id.med_name }}</th>
+            <td>{{ m.med_id.med_qty }}</td>
+            <td>{{ m.med_id.med_rate }}</td>
+            <td>{{ m.med_id.med_rate * m.med_id.med_qty }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+		
+	{% if patients != None %}
+		<button type="submit" name = "submit_button" value = "Issue_med" class="btn btn-primary mt-2">Issue Medicine</button>
+	{% endif %}
+	
+    {{ super() }}
+{% endblock %}

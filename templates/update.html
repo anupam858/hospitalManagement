@@ -9,50 +9,50 @@
 
 {% block content %}
     <center><h2 class="display-4">Update</h2></center>
-    <hr>
-    {% for message in get_flashed_messages() %}
-        {{message}}
+    <hr class="my-0">
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{category}}" role="alert">{{message}}</div>
     {% endfor %}
     
     <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
-        <form action="{{url_for('update')}}" method="POST">
+        <form action="{{url_for('hospitalmanagement.update')}}" method="POST">
             <div class="form-group row">
-            <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
-            <input type="text" class="form-control col-lg-5 float-right" name="patient_id" placeholder="Patient Id" maxlength="9" min="100000000" required>
+            <label for="patient_id" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="patient_id" placeholder="Patient Id" maxlength="9" min="100000000" value= "{{ patient.ws_pat_id if patient !=None}}" required>
+            <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary btn-sm ml-1">Get</button>
             </div>
-			<button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary mt-2">Get</button>
             <div class="form-group row">
             <label for="pat_name" class="control-label col-sm-4">Patient Name</label>
-            <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value= "{{ patient.ws_pat_name}}" >
+            <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value= "{{ patient.ws_pat_name if patient !=None}}" >
             </div>
             <div class="form-group row">
                 <label for="pat_age" class="control-label col-sm-4">Patient Age</label>
-                <input type="number" class="form-control col-lg-5 float-right" name="pat_age" placeholder="Age" value= "{{ patient.ws_age}}" min="0" max="999" >
+                <input type="number" class="form-control col-lg-5 float-right" name="pat_age" placeholder="Age" value= "{{ patient.ws_age if patient !=None}}" min="0" max="999" >
             </div>
             <div class="form-group row">
                 <label for="pat_doa" class="control-label col-sm-4">Date of Admission</label>
-                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient.ws_doj}}">
+                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient.ws_doj.strftime('%Y-%m-%dT%H:%M') if patient !=None}}">
             </div>
             <div class="form-group row">
                 <label for="bed_type" class="control-label col-sm-4">Type of bed</label>
                 <select  name="bed_type" class="form-control col-lg-5 float-right">
-                <option value= "{{ patient.ws_rtype}}">{{ patient.ws_rtype}}</option>
-				<option value= "GW" selected>General Ward</option>
-                <option value="SS">Semi Sharing</option>
-                <option value="SR">Single Room</option>
+				<option value= "GW" {{'selected' if patient.ws_rtype=='GW'}}>General Ward</option>
+                <option value="SS" {{'selected' if patient.ws_rtype=='SS'}}>Semi Sharing</option>
+                <option value="SR" {{'selected' if patient.ws_rtype=='SR'}}>Single Room</option>
                 </select>
             </div>
             <div class="form-group row">
                 <label for="pat_address" class="control-label col-sm-4">Address</label>
-                <textarea class="form-control col-lg-7 float-right" name="pat_address" required> {{ patient.ws_adrs}} </textarea>
+                <textarea class="form-control col-lg-7 float-right" name="pat_address" > {{ patient.ws_adrs if patient !=None}} </textarea>
             </div>
             <div class="form-group row">
                 <label for="pat_city" class="control-label col-sm-4">City</label>
-                <input type="text" class="form-control col-lg-5 float-right" name="pat_city" placeholder="City" value= "{{ patient.ws_city}}" required>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_city" placeholder="City" value= "{{ patient.ws_city if patient !=None}}" >
             </div>
             <div class="form-group row">
                 <label for="pat_state" class="control-label col-sm-4">State</label>
-                <input type="text" class="form-control col-lg-5 float-right" name="pat_state" placeholder="State" value= "{{ patient.ws_state}}" required>
+                <input type="text" class="form-control col-lg-5 float-right" name="pat_state" placeholder="State" value= "{{ patient.ws_state if patient !=None}}">
             </div>
 			
             <div><sup>*</sup>Mandatory</div>

@@ -10,7 +10,7 @@ button.btn.btn-primary:click , input.btn.btn-primary:click{
   color: white;
 }
 
-button.btn.btn-primary, input.btn.btn-primary{ 
+button.btn.btn-primary, input.btn.btn-primary, a.btn.btn-primary.float-right{ 
 	background-color: #2ECC72;
 	border: 0px;
 	color: white; 

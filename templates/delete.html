@@ -9,19 +9,20 @@
 
 {% block content %}
     <center><h2 class="display-4">Delete</h2></center>
-    <hr>
-    {% for message in get_flashed_messages() %}
-        {{message}}
+    <hr class="my-0">
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{category}}" role="alert">{{message}}</div>
     {% endfor %}
     
     <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
 	
-        <form action="{{url_for('delete')}}" method="POST">
+        <form action="{{url_for('hospitalmanagement.delete')}}" method="POST">
             <div class="form-group row">
-            <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
-            <input type="text" class="form-control col-lg-5 float-right" name="patient_id" placeholder="Patient Id" maxlength="9" min="100000000" required>
+            <label for="patient_id" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="patient_id" placeholder="Patient Id" maxlength="9" min="100000000" value= "{{ patient.ws_pat_id if patient !=None}}" required>
+            <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>    
             </div>
-			<button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary mt-2">Get</button>
             <div class="form-group row">
             <label for="pat_name" class="control-label col-sm-4">Patient Name</label>
             <input type="text" class="form-control col-lg-5 float-right" name="pat_name" placeholder="Name" value= "{{ patient.ws_pat_name}}">
@@ -32,7 +33,7 @@
             </div>
             <div class="form-group row">
                 <label for="pat_doa" class="control-label col-sm-4">Date of Admission</label>
-                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient.ws_doj}}">
+                <input type="datetime-local" class="form-control col-lg-5 float-right" name="pat_doa" placeholder="Admission Date" value= "{{ patient.ws_doj.strftime('%Y-%m-%dT%H:%M') if patient !=None}}">
             </div>
             <div class="form-group row">
                 <label for="bed_type" class="control-label col-sm-4">Type of bed</label>

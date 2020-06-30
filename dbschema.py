@@ -47,5 +47,5 @@ class DiagnosticsMaster(me.Document):
 class PatientDiag(me.Document):
 
     pat_id = me.ReferenceField(PatientStore)
-    test_id = me.StringField(required=True)
+    test_id = me.ReferenceField(DiagnosticsMaster)
 

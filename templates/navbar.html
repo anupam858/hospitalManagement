@@ -12,11 +12,13 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/patientregistration">Registration</a>
-            <a class="dropdown-item" href="#">Update Details</a>
-            <a class="dropdown-item" href="#">Delete Patient</a>
+            <a class="dropdown-item" href="/update">Update Details</a>
+            <a class="dropdown-item" href="/delete">Delete Patient</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View All</a>
+            <a class="dropdown-item" href="/viewpatients">View All</a>
             <a class="dropdown-item" href="/patientSearch">Search</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/bill">Generate Bill</a>
           </div>
         </li>
 
@@ -25,7 +27,7 @@
               Pharmacy
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Search Patient</a>
+              <a class="dropdown-item" href="/pharmacy/patientSearch">Search Patient</a>
             </div>
         </li>
 
@@ -34,10 +36,11 @@
             Diagnostics
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Search Patient</a> 
+            <a class="dropdown-item" href="/diagnostics/patientSearch">Search Patient</a> 
           </div>
         </li>
         
       </ul>
+      <a class="btn btn-primary float-right" href="{{url_for('hospitalmanagement.logout')}}" role="button">Logout</a>
     </div>
 </nav>

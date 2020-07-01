@@ -238,6 +238,56 @@ def delete():
     else:
         return render_template("delete.html", patient=patient)
 
+@bp.route('/diagnostics/patientSearch', methods=['GET'])
+@login_required
+def diag_pat_details():
+
+    pat = None
+    tests= None
+    if request.method=='GET':
+
+        id = request.args.get('id')
+
+        if id != None:
+            pat = PatientStore.objects(ws_pat_id=id).first()
+            tests = PatientDiag.objects(pat_id= pat)
+
+        if pat== None and id is not None:
+            flash('No Patient Found',"danger")
+        
+
+        return render_template('diagnostics.html', pat= pat, tests= tests)
+
+
+@bp.route('/diagnosis/addtests', methods=['GET','POST'])
+@login_required
+def addDiag():
+    
+    if request.method== 'GET':
+        tests = DiagnosticsMaster.objects();
+        return render_template('add_diag.html', pat= {'pat_id':request.args.get('add_diag')}, tests = tests)
+
+    if request.method== 'POST':
+
+        req =request.get_json(force=True)
+        if 'test_name' in req.keys():
+
+            t= DiagnosticsMaster.objects(test_name= req["select_list"]).first()
+            return jsonify(t)
+
+        elif 'submit_button' in req.keys():
+            pat_id = req["pat_id"]
+            pat = PatientStore.objects(ws_pat_id= pat_id).first()
+
+            for ts in req["data"]:
+                dm = DiagnosticsMaster.objects(test_id= ts['test_id']).first()
+                PatientDiag(pat_id= pat, test_id = dm).save()
+                #DiagnosticsMaster.objects(test_id= ts['test_id']).update_one(dec__med_qty= meds['qty_issued'])
+
+            return url_for('hospitalmanagement.diag_pat_details', id= req["pat_id"])
+
+    return abort(400)
+  
 @bp.route('/bill', methods=['GET', 'POST'])
 @login_required
 def bill_pat_details():
@@ -289,7 +339,6 @@ def bill_pat_details():
             return redirect(url_for('bill_pat_details'))
 
     return abort(400)
-            
     
 @bp.route('/logout')
 @login_required

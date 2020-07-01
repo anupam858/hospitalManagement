@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Pharmacy {% endblock %}
+{% block title %} Diagonstics {% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -8,24 +8,21 @@
 {% endblock %}
 
 {% block content %}
-    <center><h2 class="display-4">Pharmacy</h2></center>
-    <hr class="my-0">
-
-    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <center><h2 class="display-4">Diagonstics</h2></center>
+    <hr class="my-0"> 
+	  {% for category, message in get_flashed_messages(with_categories=true) %}
         <div class="alert alert-{{category}}" role="alert">{{message}}</div>
     {% endfor %}
-    
-    <div class="col-10 col-lg-4 mx-auto shadow p-3 mt-2 mb-5 bg-white rounded">
 	
-        <form action="/pharmacyPatSearch/psearch" method="POST">
+    <div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
+	
+        <form action="/diagnosisPatSearch/psearch" method="POST">
             <div class="form-group row">
-                <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
-                <input type="text" class="form-control col-lg-5" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
-                <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>
+            <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="pat_id" placeholder="Patient Id" maxlength="9" min="100000000" required>
             </div>
-			
-            <div><sup>*</sup>Mandatory</div>
-			
+			<button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary mt-2">Get</button>		
+            <div><sup>*</sup>Mandatory</div>		
         </form>
     </div>
 	
@@ -41,7 +38,7 @@
         </tr>
         </thead>
         <tbody>
-
+		
         {% if pat != None %}
         <tr>
             <th scope="row"><center>{{ pat.ws_pat_id }}</center></th>
@@ -66,46 +63,34 @@
         </tbody>
     </table>
 	
-    <center><h4 class="display-4">Medicine Issued</h4></center>
-    
+	<center><h2 class="display-4">Diagonstics Conducted</h2></center>
 	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
-        <thead class="thead-dark" >
+        <thead class="thead-dark">
         <tr>
-            <th scope="col"><center>Medicine</center></th>
-            <th scope="col"><center>Quantity</center></th>
-            <th scope="col"><center>Rate</center></th>
+            <th scope="col"><center>Name of the test</center></th>
             <th scope="col"><center>Amount</center></th>
         </tr>
         </thead>
-    
-        <tbody>
+        <tbody class="overflow-auto">
 
-        {% if meds != None %}
-        {% for m in meds %}
+        {% if tests != None %}
+        {% for t in tests %}
         <tr>
-            <th scope="row"><center>{{ m.med_id.med_name }}</center></th>
-            <td><center>{{m.med_qty_issued }}</center></td>
-            <td><center>{{ m.med_id.med_rate }}</center></td>
-            <td><center>{{ m.med_id.med_rate * m.med_qty_issued }}</center></td>
+            <th scope="row">{{ t.test_id.test_name }}</th>
+            <td>{{ t.test_id.test_charge }}</td>
         </tr>
         {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="4"><center>No Medicines Issued</center></td>
-        </tr>
         {% endif %}
         </tbody>
-
     </table>
-
-    {% if pat != None %}
-    <div class="mt-2 mb-3">
-        <form action= "{{url_for('hospitalmanagement.issueMedicine')}}" method="GET">
-            <center><button type="submit" name = "issue_medicine" value = {{ pat.ws_pat_id }} class="btn btn-primary ml-1">Issue Medicines</button></center>
+		
+	{% if tests != None %}
+		<div class="mt-2 mb-3">
+        <form action= "{{url_for('hospitalmanagement.addDiag')}}" method="GET">
+            <center><button type="submit" name = "add_diag" value = {{ pat.ws_pat_id }} class="btn btn-primary ml-1">Add Diagonstics</button></center>
         </form>
     </div>
 	{% endif %}
 	
     {{ super() }}
-
 {% endblock %}

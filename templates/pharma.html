@@ -15,57 +15,58 @@
         <div class="alert alert-{{category}}" role="alert">{{message}}</div>
     {% endfor %}
     
-    <div class="col-10 col-lg-4 mx-auto shadow p-3 mt-2 mb-5 bg-white rounded">
-	
-        <form action="/pharmacyPatSearch/psearch" method="POST">
-            <div class="form-group row">
-                <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
-                <input type="text" class="form-control col-lg-5" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
-                <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>
-            </div>
-			
-            <div><sup>*</sup>Mandatory</div>
-			
-        </form>
-    </div>
-	
-	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col"><center>Patient ID</center></th>
-            <th scope="col"><center>Name</center></th>
-            <th scope="col"><center>Age</center></th>
-            <th scope="col"><center>Address</center></th>
-            <th scope="col"><center>DOJ</center></th>
-            <th scope="col"><center>Type of Room</center></th>
-        </tr>
-        </thead>
-        <tbody>
-
-        {% if pat != None %}
-        <tr>
-            <th scope="row"><center>{{ pat.ws_pat_id }}</center></th>
-            <td><center>{{ pat.ws_pat_name }}</center></td>
-            <td><center>{{ pat.ws_age }}</center></td>
-            <td><center>{{ pat.ws_adrs }}</center></td>
-            <td><center>{{ pat.ws_doj.strftime('%Y-%m-%d') }}</center></td>
-            {% if pat.ws_rtype=="GW" %}
-                <td><center>General Ward</center></td>
-            {% elif pat.ws_rtype=="SS" %}
-                <td><center>Semi Sharing</center></td>
-            {% else %}
-                <td><center>Single Room</center></td>
-            {% endif %}
-        </tr>
+    <div class="row">
+        <div class="col-10 col-lg-3 mx-auto shadow p-3 mt-2 mb-3 bg-white rounded">
         
-        {% else %}
-        <tr>
-            <td colspan="6"><center>No Patients</center></td>
-        </tr>
-        {% endif %}
-        </tbody>
-    </table>
-	
+            <form action="/pharmacyPatSearch/psearch" method="POST">
+                <div class="form-group row">
+                    <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+                    <input type="text" class="form-control col-lg-5" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
+                    <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>
+                </div>
+                
+                <div><sup>*</sup>Mandatory</div>
+                
+            </form>
+        </div>
+        
+        <table class="table col-10 col-lg-8 mt-3 mx-auto shadow p-3 mb-3 bg-white rounded">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col"><center>Patient ID</center></th>
+                <th scope="col"><center>Name</center></th>
+                <th scope="col"><center>Age</center></th>
+                <th scope="col"><center>Address</center></th>
+                <th scope="col"><center>DOJ</center></th>
+                <th scope="col"><center>Type of Room</center></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% if pat != None %}
+            <tr>
+                <th scope="row"><center>{{ pat.ws_pat_id }}</center></th>
+                <td><center>{{ pat.ws_pat_name }}</center></td>
+                <td><center>{{ pat.ws_age }}</center></td>
+                <td><center>{{ pat.ws_adrs }}</center></td>
+                <td><center>{{ pat.ws_doj.strftime('%d-%m-%Y') }}</center></td>
+                {% if pat.ws_rtype=="GW" %}
+                    <td><center>General Ward</center></td>
+                {% elif pat.ws_rtype=="SS" %}
+                    <td><center>Semi Sharing</center></td>
+                {% else %}
+                    <td><center>Single Room</center></td>
+                {% endif %}
+            </tr>
+            
+            {% else %}
+            <tr>
+                <td colspan="6"><center>No Patients</center></td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
+	</div>
     <center><h4 class="display-4">Medicine Issued</h4></center>
     
 	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">

@@ -1,6 +1,6 @@
 import functools
 from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for, abort, jsonify
-from .dbschema import UserStore, PatientStore, PatientMed, MedicineMaster, PatientDiag
+from .dbschema import UserStore, PatientStore, PatientMed, MedicineMaster, PatientDiag, DiagnosticsMaster
 from datetime import datetime, date
 from werkzeug.security import generate_password_hash
 
@@ -132,6 +132,57 @@ def issueMedicine():
 
     return abort(400)
 
+@bp.route('/diagnostics/patientSearch', methods=['GET'])
+@login_required
+def diag_pat_details():
+
+    pat = None
+    tests= None
+    if request.method=='GET':
+
+        id = request.args.get('id')
+
+        if id != None:
+            pat = PatientStore.objects(ws_pat_id=id).first()
+            tests = PatientDiag.objects(pat_id= pat)
+
+        if pat== None and id is not None:
+            flash('No Patient Found',"danger")
+        
+
+        return render_template('diagnostics.html', pat= pat, tests= tests)
+
+
+@bp.route('/diagnosis/addtests', methods=['GET','POST'])
+@login_required
+def addDiag():
+    
+    if request.method== 'GET':
+        tests = DiagnosticsMaster.objects()
+        return render_template('add_diag.html', pat= {'pat_id':request.args.get('add_diag')}, tests = tests)
+
+    if request.method== 'POST':
+
+        req =request.get_json(force=True)
+    
+        if 'test_name' in req.keys():
+
+            t= DiagnosticsMaster.objects(test_name= req["test_name"]).first()
+            return jsonify(t)
+
+        elif 'submit_button' in req.keys():
+            pat_id = req["pat_id"]
+            pat = PatientStore.objects(ws_pat_id= pat_id).first()
+
+            for ts in req["data"]:
+                dm = DiagnosticsMaster.objects(test_id= ts['test_id']).first()
+                PatientDiag(pat_id= pat, test_id = dm).save()
+                #DiagnosticsMaster.objects(test_id= ts['test_id']).update_one(dec__med_qty= meds['qty_issued'])
+
+            return url_for('hospitalmanagement.diag_pat_details', id= req["pat_id"])
+
+    return abort(400)
+
 @bp.route('/<string:section>/psearch', methods =['POST'])
 @login_required
 def search(section):
@@ -238,55 +289,6 @@ def delete():
     else:
         return render_template("delete.html", patient=patient)
 
-@bp.route('/diagnostics/patientSearch', methods=['GET'])
-@login_required
-def diag_pat_details():
-
-    pat = None
-    tests= None
-    if request.method=='GET':
-
-        id = request.args.get('id')
-
-        if id != None:
-            pat = PatientStore.objects(ws_pat_id=id).first()
-            tests = PatientDiag.objects(pat_id= pat)
-
-        if pat== None and id is not None:
-            flash('No Patient Found',"danger")
-        
-
-        return render_template('diagnostics.html', pat= pat, tests= tests)
-
-
-@bp.route('/diagnosis/addtests', methods=['GET','POST'])
-@login_required
-def addDiag():
-    
-    if request.method== 'GET':
-        tests = DiagnosticsMaster.objects();
-        return render_template('add_diag.html', pat= {'pat_id':request.args.get('add_diag')}, tests = tests)
-
-    if request.method== 'POST':
-
-        req =request.get_json(force=True)
-        if 'test_name' in req.keys():
-
-            t= DiagnosticsMaster.objects(test_name= req["select_list"]).first()
-            return jsonify(t)
-
-        elif 'submit_button' in req.keys():
-            pat_id = req["pat_id"]
-            pat = PatientStore.objects(ws_pat_id= pat_id).first()
-
-            for ts in req["data"]:
-                dm = DiagnosticsMaster.objects(test_id= ts['test_id']).first()
-                PatientDiag(pat_id= pat, test_id = dm).save()
-                #DiagnosticsMaster.objects(test_id= ts['test_id']).update_one(dec__med_qty= meds['qty_issued'])
-
-            return url_for('hospitalmanagement.diag_pat_details', id= req["pat_id"])
-
-    return abort(400)
   
 @bp.route('/bill', methods=['GET', 'POST'])
 @login_required
@@ -294,7 +296,7 @@ def bill_pat_details():
     pat= None
     meds= None
     diag= None
-    diff = None
+    diff = 0
     bill_room = 0
     bill_med = 0
     bill_diag = 0
@@ -304,7 +306,8 @@ def bill_pat_details():
         
         if id is not None:
             pat = PatientStore.objects(ws_pat_id=id).first()
-            diff = abs(datetime.now()-pat.ws_doj).days +1
+            if pat is not None:
+                diff = abs(datetime.now()-pat.ws_doj).days +1
 
             if(pat==None):
                 flash("No Patient found for patient id","danger")
@@ -334,9 +337,9 @@ def bill_pat_details():
     if request.method=="POST":
 
         if request.form["discharge_button"]== request.args.get('id'):
-            PatientStore.objects(pat_id=id).first().update_one(ws_status=0)
+            PatientStore.objects(ws_pat_id=request.args.get('id')).first().update(ws_status=0)
             flash("Patient Bill Generated","success")
-            return redirect(url_for('bill_pat_details'))
+            return redirect(url_for('hospitalmanagement.bill_pat_details'))
 
     return abort(400)
     

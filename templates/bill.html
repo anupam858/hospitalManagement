@@ -90,7 +90,7 @@
         </thead>
     
         <tbody>
-        {% if meds != None or meds | length !=0 %}
+        {% if meds != None and meds | length !=0 %}
         {% for m in meds %}
         <tr>
             <th scope="row"><center>{{ m.med_id.med_name }}</center></th>
@@ -130,8 +130,8 @@
         {% if diag != None and diag|length !=0 %}
             {% for d in diag %}
             <tr>
-                <th scope="row"><center>{{ m.med_id.med_name }}</center></th>
-                <td><center>Rs. {{ m.med_id.med_rate }}</center></td>
+                <th scope="row"><center>{{ d.test_id.test_name }}</center></th>
+                <td><center>Rs. {{ d.test_id.test_charge }}</center></td>
             </tr>
             {% endfor %}
             <tr>
@@ -145,15 +145,16 @@
         {% endif %}
         </tbody>
     </table>
+    {% if pat != None %}
     <form method="POST">
         <center><button type="submit" name = "discharge_button" value = {{pat.ws_pat_id}} class="btn btn-primary btn-lg mt-2 mb-3">Generate Bill</button></center>
     </form>
+    {% endif %}
     {{ super() }}
     <script>
         const date = new Date()
         const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: '2-digit', day: '2-digit' });
         const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(date);
         document.getElementById("date").innerHTML=  `${day}-${month}-${year}`;
-
     </script>
 {% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %} Pharmacy {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <center><h2 class="display-4">Diagnosis</h2></center>
+    <hr class="my-0">
+		
+		 <div class="alert alert-danger" id="alerttext" role="alert"></div>
+	<div class= "row">	 
+		<div class="col-10 col-lg-4 mx-auto shadow p-3 mb-5 bg-white rounded">
+	
+	<form  id="selectForm">      
+            <div class="form-group row">
+            <label for="med-name" class="control-label col-sm-4">Diagnosis<sup>*</sup></label>
+            <select name = "select_list" id = "select_list" class = "form-control col-lg-5 float right">
+					
+					<option value= "Select Option" > Select Option</option>
+					{% for t in tests %}
+					<option value= "{{ tests.test_name }}"  > {{ tests.test_name }}</option>
+					{ %endfor %}
+			</select>	
+            </div>
+
+            <div><sup>*</sup>Mandatory</div>			
+	</form>
+		<form id="addForm2">
+			<div class="form-group row" id="add_block2">
+			<button type="submit" id = "add_diag" class="btn btn-primary ml-1">Add</button>
+			</div>
+		</form>    
+		</div>
+	
+    <table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+			<th scope="col"><center>Test ID</center></th>
+            <th scope="col"><center>Name of the test</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+        <tbody id="diagnostics_body">
+
+        
+        </tbody>
+		</table>
+		
+	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Name of the test</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+        <tbody id="added_diagnostics">
+
+        
+        </tbody>
+		</table>
+	</div>
+	<center><button type="submit" id="submit_button" name = "submit_button" value = "update" class="btn btn-primary btn-lg mt-2">Update</button></center>
+	
+    {{ super() }}
+	<script src={{url_for("static", filename="js/script2.js")}}></script>
+    <script type="text/javascript">
+        myVar = pat_set({{ pat | tojson }})
+     </script>
+{% endblock %}

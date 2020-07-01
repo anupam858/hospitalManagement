@@ -31,7 +31,7 @@
             <td>{{ pat.ws_pat_name }}</td>
             <td>{{ pat.ws_age }}</td>
             <td>{{ pat.ws_adrs }}</td>
-            <td>{{ pat.ws_doj.strftime('%Y-%m-%d') }}</td>
+            <td>{{ pat.ws_doj.strftime('%d-%m-%Y') }}</td>
             {% if pat.ws_rtype=="GW" %}
                 <td>General Ward</td>
             {% elif pat.ws_rtype=="SS" %}

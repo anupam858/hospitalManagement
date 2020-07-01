@@ -1,7 +1,7 @@
 import functools
 from flask import Flask, render_template,redirect, request, Blueprint, flash,session, url_for, abort, jsonify
-from .dbschema import UserStore, PatientStore, PatientMed, MedicineMaster
-from datetime import datetime
+from .dbschema import UserStore, PatientStore, PatientMed, MedicineMaster, PatientDiag
+from datetime import datetime, date
 from werkzeug.security import generate_password_hash
 
 bp = Blueprint('hospitalmanagement' ,__name__)
@@ -238,7 +238,6 @@ def delete():
     else:
         return render_template("delete.html", patient=patient)
 
-
 @bp.route('/diagnostics/patientSearch', methods=['GET'])
 @login_required
 def diag_pat_details():
@@ -288,15 +287,58 @@ def addDiag():
             return url_for('hospitalmanagement.diag_pat_details', id= req["pat_id"])
 
     return abort(400)
-
+  
 @bp.route('/bill', methods=['GET', 'POST'])
 @login_required
 def bill_pat_details():
     pat= None
     meds= None
     diag= None
+    diff = None
+    bill_room = 0
+    bill_med = 0
+    bill_diag = 0
 
-    return render_template('bill.html', pat= pat, meds= meds, diag= diag)
+    if request.method=="GET":
+        id = request.args.get('id')
+        
+        if id is not None:
+            pat = PatientStore.objects(ws_pat_id=id).first()
+            diff = abs(datetime.now()-pat.ws_doj).days +1
+
+            if(pat==None):
+                flash("No Patient found for patient id","danger")
+
+            else:
+                meds = PatientMed.objects(pat_id= pat)
+                diag= PatientDiag.objects(pat_id =pat)
+
+                if pat.ws_rtype =='GW':
+                    bill_room = 2000*diff
+                elif pat.ws_rtype=='SS':
+                    bill_room = 4000*diff
+                else:
+                    bill_room = 8000*diff
+                
+                for m in meds:
+                    bill_med = bill_med + m.med_id.med_rate*m.med_qty_issued
+                
+                for d in diag:
+                    bill_diag = bill_diag + d.test_id.test_charge
+
+                if pat.ws_status==0:
+                    flash("Patient Already Discharged","warning")
+
+        return render_template('bill.html', pat= pat, meds= meds, diag= diag, diff=diff, bill_room = bill_room, bill_med=bill_med, bill_diag=bill_diag)
+
+    if request.method=="POST":
+
+        if request.form["discharge_button"]== request.args.get('id'):
+            PatientStore.objects(pat_id=id).first().update_one(ws_status=0)
+            flash("Patient Bill Generated","success")
+            return redirect(url_for('bill_pat_details'))
+
+    return abort(400)
     
 @bp.route('/logout')
 @login_required

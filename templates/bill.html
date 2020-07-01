@@ -1,0 +1,159 @@
+{% extends "base.html"%}
+
+{% block title %} Bill {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <center><h2 class="display-4">Bill</h2></center>
+    <hr class="my-0">
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{category}}" role="alert">{{message}}</div>
+    {% endfor %}
+
+    <div class="row">
+    <div class="col-10 col-lg-3 shadow p-2 mt-2 mb-2 ml-3 bg-white rounded">
+	
+        <form action="/billPatSearch/psearch" method="POST">
+            <div class="form-group row">
+            <label for="pat_id" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+            <input type="text" class="form-control col-lg-5 float-right" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
+            <button type="submit" name = "bill_patient_search" value = "get_button" class="btn btn-primary ml-1">Get</button>
+            </div>
+            <div><sup>*</sup>Mandatory</div>	
+        </form>
+    </div>
+
+    <table class="table col-10 col-lg-8 mt-2 shadow p-3 mb-2 ml-3 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Patient ID</center></th>
+            <th scope="col"><center>Name</center></th>
+            <th scope="col"><center>Age</center></th>
+            <th scope="col"><center>Address</center></th>
+            <th scope="col"><center>DOJ</center></th>
+            <th scope="col"><center>Discharge Date</center></th>
+            <th scope="col"><center>Type of Room</center></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% if pat != None %}
+        <tr>
+            <th scope="row"><center>{{ pat.ws_pat_id }}</center></th>
+            <td><center>{{ pat.ws_pat_name }}</center></td>
+            <td><center>{{ pat.ws_age }}</center></td>
+            <td><center>{{ pat.ws_adrs }}</center></td>
+            <td><center>{{ pat.ws_doj.strftime('%d-%m-%Y') }}</center></td>
+            <td><center><span id="date"></span></center></td>
+            {% if pat.ws_rtype=="GW" %}
+                <td><center>General Ward</center></td>
+            {% elif pat.ws_rtype=="SS" %}
+                <td><center>Semi Sharing</center></td>
+            {% else %}
+                <td><center>Single Room</center></td>
+            {% endif %}
+        </tr>
+        
+        {% else %}
+        <tr>
+            <td colspan="7"><center>No Patients</center></td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+
+    <div class= "row float-right" style="margin-right: 8vw;">
+        <h5 class="mr-5">No. of Days: {{ diff }}  </h5>
+        <h5 >Bill for Room: Rs. {{ bill_room }}</h5>
+    </div>
+    <br>
+
+    <div class="mt-2">
+        <hr>
+        <p class="h2 text-center">Pharmacy Charges</p>
+    </div>
+
+    <table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark" >
+        <tr>
+            <th scope="col"><center>Medicine</center></th>
+            <th scope="col"><center>Quantity</center></th>
+            <th scope="col"><center>Rate</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+    
+        <tbody>
+        {% if meds != None or meds | length !=0 %}
+        {% for m in meds %}
+        <tr>
+            <th scope="row"><center>{{ m.med_id.med_name }}</center></th>
+            <td><center>{{m.med_qty_issued }}</center></td>
+            <td><center> Rs. {{ m.med_id.med_rate }}</center></td>
+            <td><center>Rs. {{ m.med_id.med_rate * m.med_qty_issued }}</center></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <th scope="row"><center>Total</center></th>
+            <td><center>Rs. {{ bill_med }}</center></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4"><center>No Medicines Issued</center></td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="mt-2">
+        <hr>
+        <p class="h2 text-center">Diagnostics Charges</p>
+    </div>
+
+    <table class="table col-10 col-lg-5 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark" >
+        <tr>
+            <th scope="col"><center>Name of Test</center></th>
+            <th scope="col"><center>Amount</center></th>
+        </tr>
+        </thead>
+    
+        <tbody>
+        {% if diag != None and diag|length !=0 %}
+            {% for d in diag %}
+            <tr>
+                <th scope="row"><center>{{ m.med_id.med_name }}</center></th>
+                <td><center>Rs. {{ m.med_id.med_rate }}</center></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th scope="row"><center>Total</center></th>
+                <td><center>Rs. {{ bill_diag }}</center></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4"><center>No Diagnostics Done</center></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <form method="POST">
+        <center><button type="submit" name = "discharge_button" value = {{pat.ws_pat_id}} class="btn btn-primary btn-lg mt-2 mb-3">Generate Bill</button></center>
+    </form>
+    {{ super() }}
+    <script>
+        const date = new Date()
+        const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(date);
+        document.getElementById("date").innerHTML=  `${day}-${month}-${year}`;
+
+    </script>
+{% endblock %}

@@ -19,9 +19,9 @@
 	
         <form action="/pharmacyPatSearch/psearch" method="POST">
             <div class="form-group row">
-            <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
-            <input type="text" class="form-control col-lg-5 float-right" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
-            <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>
+                <label for="pat_ssn" class="control-label col-sm-4">Patient ID<sup>*</sup></label>
+                <input type="text" class="form-control col-lg-5" name="pat_id" placeholder="Search by Patient Id" maxlength="9" min="100000000" required>
+                <button type="submit" name = "submit_button" value = "Get_button" class="btn btn-primary ml-1">Get</button>
             </div>
 			
             <div><sup>*</sup>Mandatory</div>
@@ -66,9 +66,10 @@
         </tbody>
     </table>
 	
-	<center><h4 class="display-4">Medicine Issued</h4></center>
+    <center><h4 class="display-4">Medicine Issued</h4></center>
+    
 	<table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
-        <thead class="thead-dark">
+        <thead class="thead-dark" >
         <tr>
             <th scope="col"><center>Medicine</center></th>
             <th scope="col"><center>Quantity</center></th>
@@ -76,7 +77,8 @@
             <th scope="col"><center>Amount</center></th>
         </tr>
         </thead>
-        <tbody class="overflow-auto">
+    
+        <tbody>
 
         {% if meds != None %}
         {% for m in meds %}
@@ -93,8 +95,9 @@
         </tr>
         {% endif %}
         </tbody>
+
     </table>
-		
+
     {% if pat != None %}
     <div class="mt-2 mb-3">
         <form action= "{{url_for('hospitalmanagement.issueMedicine')}}" method="GET">
@@ -104,4 +107,5 @@
 	{% endif %}
 	
     {{ super() }}
+
 {% endblock %}

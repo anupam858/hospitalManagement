@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} View Patients {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block content %}
+    <table class="table col-10 col-lg-7 mx-auto mt-3 shadow p-3 mb-5 bg-white rounded">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"><center>Patient ID</center></th>
+            <th scope="col"><center>Name</center></th>
+            <th scope="col"><center>Age</center></th>
+            <th scope="col"><center>Address</center></th>
+            <th scope="col"><center>DOJ</center></th>
+            <th scope="col"><center>Type of Room</center></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+
+        {% if patients != None %}
+        {% for pat in patients %}
+        <tr>
+            <th scope="row">{{ pat.ws_pat_id }}</th>
+            <td>{{ pat.ws_pat_name }}</td>
+            <td>{{ pat.ws_age }}</td>
+            <td>{{ pat.ws_adrs }}</td>
+            <td>{{ pat.ws_doj.strftime('%d-%m-%Y') }}</td>
+            {% if pat.ws_rtype=="GW" %}
+                <td>General Ward</td>
+            {% elif pat.ws_rtype=="SS" %}
+                <td>Semi Sharing</td>
+            {% else %}
+                <td>Single Room</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+    {{ super() }}
+{% endblock %}

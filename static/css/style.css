@@ -10,7 +10,7 @@ button.btn.btn-primary:click , input.btn.btn-primary:click{
   color: white;
 }
 
-button.btn.btn-primary, input.btn.btn-primary{ 
+button.btn.btn-primary, input.btn.btn-primary, a.btn.btn-primary.float-right{ 
 	background-color: #2ECC72;
 	border: 0px;
 	color: white; 
@@ -28,4 +28,13 @@ nav.navbar.sticky-top.navbar-expand-lg.navbar-dark.bg-dark{
 textarea.form-control.col-lg-7.float-right{
 
   height: 6em;
+}
+.table .thead-dark th {
+  color: #fff;
+  background-color: #218f76;
+  border-color: #218f76;
+}
+.row{
+  margin-right: 0px;
+  margin-left: 0px;
 }
